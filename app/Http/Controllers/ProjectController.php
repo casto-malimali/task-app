@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Project;
 use App\Http\Requests\StoreProjectRequest;
 use App\Http\Requests\UpdateProjectRequest;
+use App\Http\Resources\ProjectResource;
 
 class ProjectController extends Controller
 {
@@ -14,10 +15,13 @@ class ProjectController extends Controller
     public function index()
     {
         $query = Project::query();
-            $projects = $query->pagenate(10)->onEach(1);
-            
+        $projects = $query->paginate(10)->onEachSide(1);
+
         return inertia(
-                        "Project/Index", []
+            "Project/Index",
+            [
+                'projects' => ProjectResource::collection($projects),
+            ]
         );
     }
 
